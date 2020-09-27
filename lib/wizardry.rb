@@ -14,15 +14,18 @@ require "wizardry/questions/telephone_number"
 require "wizardry/questions/email_address"
 require "wizardry/questions/date"
 
+require "wizardry/dsl"
+
 require "govuk_design_system_formbuilder"
 
 module Wizardry
   extend ActiveSupport::Concern
 
   class_methods do
-    def wizard(...)
+    def wizard(name, &block)
+      framework_options = Wizardry::Dsl::WizardDsl.parse_dsl(name, &block)
       define_method(:wizard) do
-        @framework ||= Wizardry::Framework.new(...)
+        @framework ||= Wizardry::Framework.new(framework_options)
       end
     end
   end
